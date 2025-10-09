@@ -1,0 +1,34 @@
+[33mcommit bb601497ffba797a563c097a66c04fa2f1e0d92d[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m, [m[1;32mbackup-main[m[33m)[m
+Author: RybaLP <148885360+RybaLP@users.noreply.github.com>
+Date:   Wed Oct 1 23:15:46 2025 +0200
+
+    Complete backend setup with authentication, cart, orders, and reviews
+
+.gitignore
+src/main/java/com/ecommerce/config/SecurityConfig.java
+src/main/java/com/ecommerce/controller/AuthenticationController.java
+src/main/java/com/ecommerce/controller/CartController.java
+src/main/java/com/ecommerce/controller/ClientController.java
+src/main/java/com/ecommerce/controller/OrderController.java
+src/main/java/com/ecommerce/controller/PlantController.java
+src/main/java/com/ecommerce/controller/ReviewController.java
+src/main/java/com/ecommerce/dto/cart/DeleteFromCartRequestDto.java
+src/main/java/com/ecommerce/dto/order/UpdateOrderStatusDto.java
+src/main/java/com/ecommerce/dto/review/CreateReviewRequestDto.java
+src/main/java/com/ecommerce/dto/review/EditReviewDto.java
+src/main/java/com/ecommerce/dto/review/ReviewDto.java
+src/main/java/com/ecommerce/enums/Rate.java
+src/main/java/com/ecommerce/mapper/ReviewMapper.java
+src/main/java/com/ecommerce/model/product/Plant.java
+src/main/java/com/ecommerce/model/product/Review.java
+src/main/java/com/ecommerce/model/user/Client.java
+src/main/java/com/ecommerce/repository/order/OrderRepository.java
+src/main/java/com/ecommerce/repository/plant/PlantRepository.java
+src/main/java/com/ecommerce/repository/review/ReviewRepository.java
+src/main/java/com/ecommerce/service/CartService.java
+src/main/java/com/ecommerce/service/ClientService.java
+src/main/java/com/ecommerce/service/OrderService.java
+src/main/java/com/ecommerce/service/PlantService.java
+src/main/java/com/ecommerce/service/ReviewService.java
+src/main/java/com/ecommerce/util/AuthenticateClient.java
+src/main/resources/application.properties
