@@ -7,4 +7,5 @@ import lombok.Data;
 @Data
 public class CheckoutResponseDto {
     private String stripeCheckoutUrl;
+    private String orderNumber;
 }

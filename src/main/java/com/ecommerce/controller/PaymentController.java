@@ -4,6 +4,7 @@ import com.ecommerce.dto.payment.CheckoutRequestDto;
 import com.ecommerce.dto.payment.CheckoutResponseDto;
 import com.ecommerce.model.user.Client;
 import com.ecommerce.service.PaymentService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,22 +17,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/payment")
 @RequiredArgsConstructor
-
 public class PaymentController {
 
     private final PaymentService paymentService;
 
-    @PostMapping("/create-checkout-session")
-    public ResponseEntity<CheckoutResponseDto> createCheckoutSession(
-            @RequestBody CheckoutRequestDto checkoutRequestDto,
-            @AuthenticationPrincipal Client client
-    ) throws Exception {
-        CheckoutResponseDto checkoutResponseDto = paymentService.createCheckoutSession(
-                checkoutRequestDto.getOrderId(), client
-        );
-
-        return new ResponseEntity<>(checkoutResponseDto, HttpStatus.OK);
+    @PostMapping("/checkout")
+    public ResponseEntity<CheckoutResponseDto> createCheckoutSession(@Valid @RequestBody CheckoutRequestDto checkoutRequestDto) {
+        CheckoutResponseDto checkoutResponseDto = paymentService.createCheckoutSession(checkoutRequestDto.getOrderId());
+        return ResponseEntity.ok(checkoutResponseDto);
     }
-
-
 }

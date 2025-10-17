@@ -1,6 +1,5 @@
-package com.ecommerce.dto.cart;
+package com.ecommerce.dto.order;
 
-import com.ecommerce.dto.Plant.PlantDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,11 +8,9 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 
 @Builder
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
-public class CartItemDto {
-    private Long plantId;
-    private Integer quantity;
-    private PlantDto plant;
+public class DeliveryPriceDto {
+    private BigDecimal deliveryPrice;
 }

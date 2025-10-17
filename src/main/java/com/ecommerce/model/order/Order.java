@@ -2,7 +2,7 @@ package com.ecommerce.model.order;
 
 
 import com.ecommerce.enums.OrderStatus;
-import com.ecommerce.model.cart.CartItem;
+import com.ecommerce.enums.PaymentMethod;
 import com.ecommerce.model.discount.DiscountCode;
 import com.ecommerce.model.user.Address;
 import com.ecommerce.model.user.Client;
@@ -13,6 +13,7 @@ import lombok.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Set;
+import java.util.UUID;
 
 
 @Getter
@@ -35,16 +36,40 @@ public class Order {
     private BigDecimal totalPrice;
 
     @ManyToOne
-    @JoinColumn(name = "shipping_address_id", nullable = false)
+    @JoinColumn(name = "shipping_address_id", nullable = true)
     private Address shippingAddress;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private PaymentMethod paymentMethod;
 
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
+    @Column(nullable = false)
+    private BigDecimal deliveryPrice;
+
+
+    @Column(unique = true, nullable = false)
+    private String orderNumber;
+
+    @Column(nullable = false)
+    private boolean isCompanyOrder;
+
+    private String nip;
+    private String companyName;
+
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "clientId", nullable = false)
+    @JoinColumn(name = "clientId", nullable = true)
     private Client client;
+
+//  guest props
+    private String guestFirstName;
+    private String guestLastName;
+    private String guestEmail;
+    private String guestPhone;
+//
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<OrderItem> orderItems;
@@ -70,5 +95,9 @@ public class Order {
         else {
             this.totalPrice = itemsPrice;
         }
+    }
+
+    public String generateOrderNumber () {
+        return UUID.randomUUID().toString().substring(0,8).toUpperCase();
     }
 }
