@@ -1,6 +1,5 @@
 package com.ecommerce.config;
 
-import com.ecommerce.service.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -36,7 +35,8 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/auth/refresh").hasRole("CLIENT")
-                        .requestMatchers("/api/auth/**", "/api/plant/**", "/api/plant", "/api/stripe/webhook", "/api/orders/guest")
+                        .requestMatchers("/api/auth/**", "/api/plant/**", "/api/plant", "/api/stripe/webhook", "/api/orders/guest",
+                                "/api/user-password/reset-password", "/api/user-password")
                         .permitAll()
                         .requestMatchers("/api/orders/test").hasRole("CLIENT")
                         .requestMatchers("/api/orders/**").hasRole("CLIENT")

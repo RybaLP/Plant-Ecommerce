@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 public class StripeWebhookController {
     private final PaymentService paymentService;
 
-
     @PostMapping("/webhook")
     public ResponseEntity<String> handleWebhook(@RequestBody String payload, @RequestHeader("Stripe-Signature") String sigheader) {
         paymentService.handleStripeEvent(payload,sigheader);

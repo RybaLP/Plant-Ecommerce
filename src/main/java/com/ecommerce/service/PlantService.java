@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -47,5 +46,14 @@ public class PlantService {
                 .orElseThrow(()->new IllegalStateException("Could not find plant with id" + plantId));
 
         return plantDetailMapper.plantToPlantDetailDto(plant);
+    }
+
+
+    @Transactional(readOnly = true)
+    public List<PlantDto> getAllPlants () {
+        return plantRepository.findAll()
+                .stream()
+                .map(plantMapper :: plantToPlantDto)
+                .toList();
     }
 }
