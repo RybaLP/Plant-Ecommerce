@@ -40,12 +40,17 @@ public class OrderController {
     }
 
     @PostMapping("/guest")
-    public ResponseEntity<Map<String,Object>> createGuestOrder (@RequestBody CreateGuestOrderDto createGuestOrderDto) {
-        orderService.createGuestOrderCOD(createGuestOrderDto);
-        Map<String,Object> response = new HashMap<>();
-        response.put("message", "Order created successfuly");
-        response.put("orderEmail", createGuestOrderDto.getGuestEmail());
-        return ResponseEntity.ok(response);
+    public ResponseEntity<CheckoutResponseDto> createGuestOrder (@RequestBody CreateGuestOrderDto createGuestOrderDto) {
+        return ResponseEntity.ok(orderService.createGuestOrder(createGuestOrderDto));
     }
 
+    @PostMapping("/check")
+    public ResponseEntity<Void> isOrderNumberValid(@RequestParam String orderNumber) {
+        boolean valid = orderService.isOrderNumberValid(orderNumber);
+        if (valid) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }

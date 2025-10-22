@@ -36,13 +36,14 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/auth/refresh").hasRole("CLIENT")
                         .requestMatchers("/api/auth/**", "/api/plant/**", "/api/plant", "/api/stripe/webhook", "/api/orders/guest",
-                                "/api/user-password/reset-password", "/api/user-password")
+                                "/api/user-password/reset-password", "/api/user-password", "/api/orders/check")
                         .permitAll()
                         .requestMatchers("/api/orders/test").hasRole("CLIENT")
                         .requestMatchers("/api/orders/**").hasRole("CLIENT")
                         .requestMatchers("/api/cart/**").hasRole("CLIENT")
                         .requestMatchers("/api/review/**").hasRole("CLIENT")
                         .requestMatchers("/api/payment/checkout").hasRole("CLIENT")
+                        .requestMatchers("/api/address").hasRole("CLIENT")
                         .anyRequest()
                         .authenticated()
                 )

@@ -27,7 +27,7 @@ public class PaymentService {
     @Value("${stripe.webhook.secret}")
     private String webhookSecret;
 
-    public CheckoutResponseDto createCheckoutSession(Long orderId) {
+    public CheckoutResponseDto createCheckoutSession(Long orderId, String orderNumber) {
 
         try {
 
@@ -49,16 +49,13 @@ public class PaymentService {
             SessionCreateParams params = SessionCreateParams.builder()
                     .addPaymentMethodType(SessionCreateParams.PaymentMethodType.CARD)
                     .setMode(SessionCreateParams.Mode.PAYMENT)
-                    .setSuccessUrl("http://localhost:5173")
+                    .setSuccessUrl("http://localhost:5173/zamowienie?orderNumber=" + orderNumber)
                     .setCancelUrl("http://localhost:5173/koszyk")
                     .addAllLineItem(lineItems)
                     .setClientReferenceId(String.valueOf(orderId))
                     .build();
 
             Session session = Session.create(params);
-
-            System.out.println("ClientReferenceId from Stripe: " + session.getClientReferenceId());
-
 
             return CheckoutResponseDto.builder()
                     .orderNumber(order.getOrderNumber())

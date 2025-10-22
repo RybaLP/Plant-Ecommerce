@@ -96,7 +96,7 @@ public class OrderService {
 
         switch (order.getPaymentMethod()) {
             case STRIPE -> {
-                CheckoutResponseDto checkoutResponseDto = paymentService.createCheckoutSession(order.getId());
+                CheckoutResponseDto checkoutResponseDto = paymentService.createCheckoutSession(order.getId(), order.getOrderNumber());
                 return CheckoutResponseDto.builder()
                         .orderNumber(order.getOrderNumber())
                         .stripeCheckoutUrl(checkoutResponseDto.getStripeCheckoutUrl())
@@ -117,7 +117,7 @@ public class OrderService {
 
 
     @Transactional
-    public CheckoutResponseDto createGuestOrderCOD (CreateGuestOrderDto createGuestOrderDto) {
+    public CheckoutResponseDto createGuestOrder (CreateGuestOrderDto createGuestOrderDto) {
 
         Address address = Address.builder()
                 .street(createGuestOrderDto.getShippingAddress().getStreet())
@@ -186,7 +186,7 @@ public class OrderService {
 
         switch (order.getPaymentMethod()) {
             case STRIPE -> {
-                CheckoutResponseDto checkoutResponseDto = paymentService.createCheckoutSession(order.getId());
+                CheckoutResponseDto checkoutResponseDto = paymentService.createCheckoutSession(order.getId() , order.getOrderNumber());
                 return CheckoutResponseDto.builder()
                         .orderNumber(order.getOrderNumber())
                         .stripeCheckoutUrl(checkoutResponseDto.getStripeCheckoutUrl())
@@ -226,12 +226,6 @@ public class OrderService {
                 .collect(Collectors.toList());
     }
 
-
-
-
-
-
-
     public OrderDto updateStatus (Long orderId, OrderStatus newOrderStatus) {
         Order orderToUpdate = orderRepository.findById(orderId)
                 .orElseThrow(()->new IllegalStateException("Order with this id does not exist"));
@@ -241,5 +235,10 @@ public class OrderService {
         orderRepository.save(orderToUpdate);
 
         return orderMapper.orderToOrderDto(orderToUpdate);
+    }
+
+    public boolean isOrderNumberValid(String orderNumber) {
+        Order order = orderRepository.findByOrderNumber(orderNumber);
+        return order != null;
     }
 }
