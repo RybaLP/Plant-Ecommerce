@@ -5,7 +5,7 @@ import com.ecommerce.model.product.Review;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {PlantMapper.class})
 public interface ReviewMapper {
 
     @Mapping(target = "username", source = "client.username")

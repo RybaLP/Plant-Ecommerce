@@ -1,5 +1,6 @@
 package com.ecommerce.dto.review;
 
+import com.ecommerce.dto.Plant.PlantDto;
 import com.ecommerce.enums.Rate;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,4 +20,5 @@ public class ReviewDto {
     private String comment;
     private LocalDateTime reviewDate;
     private String username;
+    private PlantDto plant;
 }

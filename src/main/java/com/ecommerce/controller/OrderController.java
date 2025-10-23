@@ -31,7 +31,7 @@ public class OrderController {
 
     @GetMapping
     public ResponseEntity<List<OrderDto>> findAllOrdersFromClient () {
-        return ResponseEntity.ok(orderService.findAllOrders());
+        return ResponseEntity.ok(orderService.findAllUserOrders());
     }
 
     @PatchMapping("/{id}")

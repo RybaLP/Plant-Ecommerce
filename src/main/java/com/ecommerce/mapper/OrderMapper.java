@@ -9,5 +9,6 @@ import org.mapstruct.Mapping;
 public interface OrderMapper {
 
     @Mapping(target = "deliveryPrice", source = "deliveryPrice")
+    @Mapping(target = "orderNumber", source = "orderNumber")
     OrderDto orderToOrderDto(Order order);
 }

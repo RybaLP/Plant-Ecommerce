@@ -1,6 +1,7 @@
 package com.ecommerce.dto.order;
 
 import com.ecommerce.dto.Plant.PlantDto;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,4 +18,7 @@ public class OrderItemDto {
     private Integer quantity;
     private BigDecimal priceAtPurchase;
     private PlantDto plant;
+
+    @JsonProperty("isReviewed")
+    private boolean isReviewed;
 }

@@ -4,6 +4,7 @@ import com.ecommerce.dto.cart.CartItemDto;
 import com.ecommerce.dto.order.CreateGuestOrderDto;
 import com.ecommerce.dto.order.CreateUserOrder;
 import com.ecommerce.dto.order.OrderDto;
+import com.ecommerce.dto.order.OrderItemDto;
 import com.ecommerce.dto.payment.CheckoutResponseDto;
 import com.ecommerce.enums.OrderStatus;
 import com.ecommerce.mapper.OrderMapper;
@@ -14,6 +15,7 @@ import com.ecommerce.model.order.OrderItem;
 import com.ecommerce.model.product.Plant;
 import com.ecommerce.model.user.Address;
 import com.ecommerce.model.user.Client;
+import com.ecommerce.repository.order.OrderItemRepository;
 import com.ecommerce.repository.order.OrderRepository;
 import com.ecommerce.repository.plant.PlantRepository;
 import com.ecommerce.repository.user.AddressRepository;
@@ -39,6 +41,7 @@ public class OrderService {
     private final PaymentService paymentService;
     private final PlantRepository plantRepository;
     private final AddressRepository addressRepository;
+    private final OrderItemRepository orderItemRepository;
 
 
     @Transactional
@@ -204,9 +207,6 @@ public class OrderService {
         }
     }
 
-
-
-
     public List<OrderDto> findAllUserOrders () {
 
         Client client = authenticateClient.getAuthenticatedClient();
@@ -241,4 +241,5 @@ public class OrderService {
         Order order = orderRepository.findByOrderNumber(orderNumber);
         return order != null;
     }
+
 }

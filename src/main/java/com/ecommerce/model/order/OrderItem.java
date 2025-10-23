@@ -1,5 +1,6 @@
 package com.ecommerce.model.order;
 
+import com.ecommerce.dto.order.OrderItemDto;
 import com.ecommerce.model.product.Plant;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -26,6 +27,8 @@ public class OrderItem {
     @Column(nullable = false)
     private BigDecimal priceAtPurchase;
 
+    private boolean isReviewed = false;
+
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "orderId", nullable = false)
@@ -51,4 +54,5 @@ public class OrderItem {
 //        when error return Zero
         return BigDecimal.ZERO;
     }
+
 }

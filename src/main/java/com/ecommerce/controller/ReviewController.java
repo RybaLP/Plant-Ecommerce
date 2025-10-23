@@ -1,5 +1,6 @@
 package com.ecommerce.controller;
 
+import com.ecommerce.dto.Plant.PlantDto;
 import com.ecommerce.dto.review.CreateReviewRequestDto;
 import com.ecommerce.dto.review.EditReviewDto;
 import com.ecommerce.dto.review.ReviewDto;
@@ -41,5 +42,16 @@ public class ReviewController {
     @GetMapping
     public ResponseEntity<List<ReviewDto>> getAllReviews() {
         return ResponseEntity.ok(reviewService.findAllReviews());
+    }
+
+
+    @GetMapping("/user")
+    public ResponseEntity<List<ReviewDto>> getUserReviews () {
+        return ResponseEntity.ok(reviewService.findUserReviews());
+    }
+
+    @GetMapping("/user/not-reviewed")
+    public ResponseEntity<List<PlantDto>> getNotReviewedItems () {
+        return ResponseEntity.ok(reviewService.getUnreviewedPlantsFromClient());
     }
 }

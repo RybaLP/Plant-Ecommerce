@@ -26,4 +26,7 @@ public class OrderDto {
     private BigDecimal deliveryPrice;
     private OrderStatus status;
     private List<OrderItemDto> orderItems;
+    private String orderNumber;
+    private String nip;
+    private String companyName;
 }
