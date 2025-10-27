@@ -71,6 +71,11 @@ public class Order {
     private String guestPhone;
 //
 
+    private String street;
+    private String city;
+    private String postalCode;
+    private String country;
+
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<OrderItem> orderItems;
 

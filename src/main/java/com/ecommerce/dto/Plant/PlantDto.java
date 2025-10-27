@@ -18,4 +18,5 @@ public class PlantDto {
     private BigDecimal price;
     private String imageUrl;
     private PlantType category;
+    private String size;
 }

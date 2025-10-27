@@ -5,5 +5,6 @@ public enum PlantType {
     CONIFEROUS,
     FLOWERING,
     HERBAL,
-    OTHER
+    OTHER,
+    FRUIT
 }

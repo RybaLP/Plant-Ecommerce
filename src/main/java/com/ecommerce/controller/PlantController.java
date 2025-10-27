@@ -32,6 +32,7 @@ public class PlantController {
         return ResponseEntity.ok(plantDetailDto);
     }
 
+
     @GetMapping
     public ResponseEntity<List<PlantDto>> getAllPlants () {
         return ResponseEntity.ok(plantService.getAllPlants());

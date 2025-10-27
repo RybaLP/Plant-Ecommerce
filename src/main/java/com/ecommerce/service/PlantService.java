@@ -56,4 +56,5 @@ public class PlantService {
                 .map(plantMapper :: plantToPlantDto)
                 .toList();
     }
+
 }

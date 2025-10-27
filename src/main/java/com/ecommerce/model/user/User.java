@@ -27,10 +27,10 @@ public abstract class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(unique = true)
     private String username;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String password;
 
     @Email
@@ -42,7 +42,7 @@ public abstract class User implements UserDetails {
     private String lastName;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "shipping_address_id", nullable = false)
+    @JoinColumn(name = "shipping_address_id")
     private Address shippingAddress;
 
     private String phoneNumber;

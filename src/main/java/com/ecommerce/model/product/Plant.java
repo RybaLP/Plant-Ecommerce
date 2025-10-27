@@ -38,6 +38,9 @@ public class Plant {
     @Enumerated(EnumType.STRING)
     private PlantType category;
 
+    @Column(columnDefinition = "TEXT")
+    private String size;
+
     @OneToMany(mappedBy = "plant", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews = new ArrayList<>();
 
