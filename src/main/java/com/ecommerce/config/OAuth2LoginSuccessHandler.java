@@ -1,6 +1,7 @@
 package com.ecommerce.config;
 
 import com.ecommerce.dto.auth.AuthenticationResponseDto;
+import com.ecommerce.enums.AuthProvider;
 import com.ecommerce.model.cart.Cart;
 import com.ecommerce.model.user.Client;
 import com.ecommerce.repository.user.ClientRepository;
@@ -45,6 +46,8 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
                     .lastName(lastName)
                     .registrationDate(LocalDateTime.now())
                     .role(com.ecommerce.enums.UserRole.CLIENT)
+                    .authProvider(AuthProvider.GOOGLE)
+                    .providerId(oauthUser.getAttribute("sub"))
                     .build();
 
             Cart cart = Cart.builder()

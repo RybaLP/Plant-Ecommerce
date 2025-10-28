@@ -3,6 +3,7 @@ package com.ecommerce.controller;
 import com.ecommerce.dto.user.ClientContactInfoDto;
 import com.ecommerce.dto.user.ClientProfileDto;
 import com.ecommerce.service.ClientService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,4 +26,9 @@ public class ClientController {
         return ResponseEntity.ok(clientService.getClientContactInfoDto());
     }
 
+    @PostMapping("/contact")
+    public ResponseEntity<ClientContactInfoDto> createClientContactDto (@Valid @RequestBody ClientContactInfoDto clientContactInfoDto){
+        ClientContactInfoDto response = clientService.createClientContactInfo(clientContactInfoDto);
+        return ResponseEntity.ok(response);
+    }
 }

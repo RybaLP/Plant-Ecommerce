@@ -19,4 +19,5 @@ public class PlantDto {
     private String imageUrl;
     private PlantType category;
     private String size;
+    private Integer quantityInStock;
 }

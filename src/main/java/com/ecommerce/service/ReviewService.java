@@ -177,4 +177,11 @@ public class ReviewService {
                 .map(plantMapper :: plantToPlantDto)
                 .toList();
     }
+
+
+    public List<ReviewDto> getPlantReviews (Long id) {
+        List<Review> reviews = reviewRepository.getReviewsByPlantId(id);
+        return reviews.stream().map(reviewMapper :: reviewToReviewDto)
+                .toList();
+    }
 }

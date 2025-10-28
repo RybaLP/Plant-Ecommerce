@@ -1,5 +1,6 @@
 package com.ecommerce.model.user;
 
+import com.ecommerce.enums.AuthProvider;
 import com.ecommerce.enums.UserRole;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -51,6 +52,14 @@ public abstract class User implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     private UserRole role;
+
+    @Column(name = "provider", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private AuthProvider authProvider = AuthProvider.LOCAL;
+
+    @Column(name = "provider_id")
+    private String providerId;
+
 
 //    jwt
     @Override

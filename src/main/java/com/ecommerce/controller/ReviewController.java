@@ -54,4 +54,10 @@ public class ReviewController {
     public ResponseEntity<List<PlantDto>> getNotReviewedItems () {
         return ResponseEntity.ok(reviewService.getUnreviewedPlantsFromClient());
     }
+
+    @GetMapping("/plant/{id}")
+    public ResponseEntity<List<ReviewDto>> getReviewsByPlantId(@PathVariable Long id) {
+        return ResponseEntity.ok(reviewService.getPlantReviews(id));
+    }
+
 }

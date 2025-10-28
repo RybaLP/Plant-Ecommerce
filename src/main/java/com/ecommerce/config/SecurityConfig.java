@@ -38,8 +38,10 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/auth/refresh").hasRole("CLIENT")
                         .requestMatchers("/api/auth/**", "/api/plant/**", "/api/plant", "/api/stripe/webhook", "/api/orders/guest",
-                                "/api/user-password/reset-password", "/api/user-password", "/api/orders/check")
+                                "/api/user-password/reset-password", "/api/user-password", "/api/orders/check", "/api/review/plant/*")
                         .permitAll()
+                        .requestMatchers("/", "/error", "/webjars/**",
+                                "/oauth2/**", "/login/oauth2/**").permitAll()
                         .requestMatchers("/api/orders/test").hasRole("CLIENT")
                         .requestMatchers("/api/orders/**").hasRole("CLIENT")
                         .requestMatchers("/api/cart/**").hasRole("CLIENT")

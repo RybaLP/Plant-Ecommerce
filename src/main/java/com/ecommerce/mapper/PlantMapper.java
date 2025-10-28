@@ -9,5 +9,6 @@ import org.mapstruct.Mapping;
 public interface PlantMapper {
 
     @Mapping(source = "size", target = "size")
+    @Mapping(source = "quantityInStock", target = "quantityInStock")
     PlantDto plantToPlantDto(Plant plant);
 }

@@ -13,13 +13,34 @@ public class AuthenticateClient {
 
         private final ClientRepository clientRepository;
 
-        public Client getAuthenticatedClient () {
+//        public Client getAuthenticatedClient () {
+//
+//            String email = SecurityContextHolder.getContext().getAuthentication().getName();
+//
+//            Client authenticatedClient = clientRepository.findByEmail(email)
+//                    .orElseThrow(()->new IllegalStateException("Couldn't authenticate an user"));
+//
+//            return authenticatedClient;
+//        }
 
-            String email = SecurityContextHolder.getContext().getAuthentication().getName();
+    public Client getAuthenticatedClient() {
 
-            Client authenticatedClient = clientRepository.findByEmail(email)
-                    .orElseThrow(()->new IllegalStateException("Couldn't authenticate an user"));
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String email = null;
 
-            return authenticatedClient;
+        if (auth.getPrincipal() instanceof org.springframework.security.core.userdetails.UserDetails userDetails) {
+            email = userDetails.getUsername();
+        } else if (auth.getPrincipal() instanceof org.springframework.security.oauth2.core.user.OAuth2User oAuth2User) {
+            email = oAuth2User.getAttribute("email");
         }
+
+        if (email == null) {
+            throw new IllegalStateException("Couldn't get email from authentication");
+        }
+
+        System.out.println(email);
+
+        return clientRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalStateException("Couldn't authenticate an user"));
+    }
 }
