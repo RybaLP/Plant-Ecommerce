@@ -39,7 +39,7 @@ public class ReviewController {
         return ResponseEntity.ok(review);
     }
 
-    @GetMapping
+    @GetMapping("/admin")
     public ResponseEntity<List<ReviewDto>> getAllReviews() {
         return ResponseEntity.ok(reviewService.findAllReviews());
     }
@@ -60,4 +60,9 @@ public class ReviewController {
         return ResponseEntity.ok(reviewService.getPlantReviews(id));
     }
 
+    @DeleteMapping("/admin/{id}")
+    public ResponseEntity<Void> adminDeleteReview (@PathVariable Long id) {
+        reviewService.adminDeleteReview(id);
+        return ResponseEntity.noContent().build();
+    }
 }

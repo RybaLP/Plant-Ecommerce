@@ -1,9 +1,6 @@
 package com.ecommerce.controller;
 
-import com.ecommerce.dto.auth.AuthenticationResponseDto;
-import com.ecommerce.dto.auth.LoginRequestDto;
-import com.ecommerce.dto.auth.RegisterRequestDto;
-import com.ecommerce.dto.auth.TokenRefreshRequest;
+import com.ecommerce.dto.auth.*;
 import com.ecommerce.service.AuthenticationService;
 import com.ecommerce.service.JwtService;
 import jakarta.servlet.http.Cookie;
@@ -97,6 +94,18 @@ public class AuthenticationController{
 
         AuthenticationResponseDto authenticationResponseDto = jwtService.refreshAccessToken(refreshToken);
 
+        return ResponseEntity.ok(authenticationResponseDto);
+    }
+
+    @PostMapping("/admin")
+    public ResponseEntity<Boolean> validateAdmin (@RequestBody LoginRequestDto loginRequestDto) {
+        boolean response =  authenticationService.isAdminLoginAndPasswordValid(loginRequestDto.getEmail() , loginRequestDto.getPassword());
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/admin/authenticate")
+    public ResponseEntity<AuthenticationResponseDto> authenticateAdmin (@Valid @RequestBody TokenRequestDto tokenRequestDto) {
+        AuthenticationResponseDto authenticationResponseDto = authenticationService.authenticateByTwoFactor(tokenRequestDto.getToken());
         return ResponseEntity.ok(authenticationResponseDto);
     }
 }

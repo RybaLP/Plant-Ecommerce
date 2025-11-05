@@ -4,10 +4,15 @@ import com.ecommerce.dto.auth.AuthenticationResponseDto;
 import com.ecommerce.dto.auth.LoginRequestDto;
 import com.ecommerce.dto.auth.RegisterRequestDto;
 import com.ecommerce.enums.UserRole;
+import com.ecommerce.model.auth.TwoFactor;
 import com.ecommerce.model.cart.Cart;
 import com.ecommerce.model.user.Address;
+import com.ecommerce.model.user.Admin;
 import com.ecommerce.model.user.Client;
+import com.ecommerce.model.user.User;
+import com.ecommerce.repository.auth.TwoFactorRepository;
 import com.ecommerce.repository.user.AddressRepository;
+import com.ecommerce.repository.user.AdminRepository;
 import com.ecommerce.repository.user.ClientRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,17 +22,20 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.time.Instant;
 import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
 
+    private final AdminRepository adminRepository;
     private final ClientRepository clientRepository;
     private final AddressRepository addressRepository;
     private final PasswordEncoder passwordEncoder;
+    private final TwoFactorRepository twoFactorRepository;
+
     private final JwtService jwtService;
+    private final EmailService emailService;
 
     private final AuthenticationManager authenticationManager;
 
@@ -92,6 +100,55 @@ public class AuthenticationService {
         return AuthenticationResponseDto.builder()
                 .token(token)
                 .refreshToken(refreshToken)
+                .build();
+    }
+
+
+
+//admin authentication logic
+
+    public boolean isAdminLoginAndPasswordValid (String email , String password) {
+        Admin admin = adminRepository.findByEmail(email).orElseThrow(() -> new IllegalStateException(""));
+        boolean isValid = admin.getPassword().equals(password);
+
+        if (!isValid) {
+            throw new IllegalStateException("Wrong email or password");
+        }
+
+        String token = TwoFactor.generateToken();
+        TwoFactor twoFactor = TwoFactor.builder()
+                .token(token)
+                .admin(admin)
+                .expirationDate(LocalDateTime.now().plusMinutes(5))
+                .build();
+        twoFactorRepository.save(twoFactor);
+
+        emailService.sendSimpleMessage(
+                admin.getEmail(),
+                "Weryfikacja dwuetapowa",
+                "Witaj! Oto twój kod do weryfikacji:" + token
+        );
+
+        return true;
+    }
+
+
+    public AuthenticationResponseDto authenticateByTwoFactor (String token) {
+
+        TwoFactor twoFactor = twoFactorRepository.findByToken(token).orElseThrow(() -> new IllegalStateException("Could not find two factor token in database"));
+
+        if (twoFactor.isExpired()) {
+            throw new IllegalStateException("Token expired");
+        }
+
+        User user = twoFactor.getAdmin();
+
+        String jwtToken = jwtService.generateToken(user);
+
+        twoFactorRepository.delete(twoFactor);
+
+        return AuthenticationResponseDto.builder()
+                .token(jwtToken)
                 .build();
     }
 }

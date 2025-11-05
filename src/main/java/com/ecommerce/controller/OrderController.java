@@ -34,7 +34,7 @@ public class OrderController {
         return ResponseEntity.ok(orderService.findAllUserOrders());
     }
 
-    @PatchMapping("/{id}")
+    @PatchMapping("/admin/order-status/{id}")
     public ResponseEntity<OrderDto> ediotOrderStatus (@PathVariable("id") Long id, @Valid @RequestBody UpdateOrderStatusDto updateOrderStatusDto) {
         return ResponseEntity.ok(orderService.updateStatus(id, updateOrderStatusDto.getOrderStatus()));
     }
@@ -52,5 +52,11 @@ public class OrderController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @GetMapping("/admin/find-all")
+    public ResponseEntity<List<OrderDto>> findAllOrders () {
+        List<OrderDto> orderDtos = orderService.findAllOrders();
+        return ResponseEntity.ok(orderDtos);
     }
 }

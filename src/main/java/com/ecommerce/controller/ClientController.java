@@ -2,11 +2,16 @@ package com.ecommerce.controller;
 
 import com.ecommerce.dto.user.ClientContactInfoDto;
 import com.ecommerce.dto.user.ClientProfileDto;
+import com.ecommerce.dto.user.ClientResponseDto;
+import com.ecommerce.model.user.Client;
+import com.ecommerce.repository.user.ClientRepository;
 import com.ecommerce.service.ClientService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @RestController
@@ -15,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 public class ClientController {
 
     private final ClientService clientService;
+    private final ClientRepository clientRepository;
 
     @GetMapping("/me")
     public ResponseEntity<ClientProfileDto> getClientInfo () {
@@ -31,4 +37,12 @@ public class ClientController {
         ClientContactInfoDto response = clientService.createClientContactInfo(clientContactInfoDto);
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/admin")
+    public ResponseEntity<List<ClientResponseDto>> findAllClients () {
+        List<ClientResponseDto> clientResponseDtoList = clientService.findAllClients();
+        return ResponseEntity.ok(clientResponseDtoList);
+    }
+
+
 }

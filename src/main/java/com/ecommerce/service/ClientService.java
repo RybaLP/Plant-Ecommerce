@@ -2,8 +2,10 @@ package com.ecommerce.service;
 
 import com.ecommerce.dto.user.ClientContactInfoDto;
 import com.ecommerce.dto.user.ClientProfileDto;
+import com.ecommerce.dto.user.ClientResponseDto;
 import com.ecommerce.mapper.AddressMapper;
 import com.ecommerce.mapper.ClientMapper;
+import com.ecommerce.mapper.ClientResponseMapper;
 import com.ecommerce.model.user.Address;
 import com.ecommerce.model.user.Client;
 import com.ecommerce.repository.user.AddressRepository;
@@ -12,6 +14,8 @@ import com.ecommerce.util.AuthenticateClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +26,7 @@ public class ClientService {
     private final ClientRepository clientRepository;
     private final AddressMapper addressMapper;
     private final AddressRepository addressRepository;
+    private final ClientResponseMapper clientResponseMapper;
 
     public ClientProfileDto getClientInfo () {
         Client client = authenticateClient.getAuthenticatedClient();
@@ -67,5 +72,13 @@ public class ClientService {
                 .phoneNumber(clientContactInfoDto.getPhoneNumber())
                 .address(clientContactInfoDto.getAddress())
                 .build();
+    }
+
+    public List<ClientResponseDto> findAllClients () {
+        List<Client> allClients = clientRepository.findAll();
+
+        return allClients.stream()
+                .map(clientResponseMapper :: clientToClientResponseDto)
+                .toList();
     }
 }

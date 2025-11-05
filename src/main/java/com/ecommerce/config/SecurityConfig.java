@@ -36,6 +36,10 @@ public class SecurityConfig {
 
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/swagger-ui/**",
+                                "/v3/api-docs/**",
+                                "/swagger-ui.html").permitAll()
+                        .requestMatchers("/api/review/admin/**", "/api/orders/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/auth/refresh").hasRole("CLIENT")
                         .requestMatchers("/api/auth/**", "/api/plant/**", "/api/plant", "/api/stripe/webhook", "/api/orders/guest",
                                 "/api/user-password/reset-password", "/api/user-password", "/api/orders/check", "/api/review/plant/*")
@@ -48,6 +52,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/review/**").hasRole("CLIENT")
                         .requestMatchers("/api/payment/checkout").hasRole("CLIENT")
                         .requestMatchers("/api/address").hasRole("CLIENT")
+                        .requestMatchers( "/api/plants/admin", "/api/user/admin").hasRole("ADMIN")
                         .anyRequest()
                         .authenticated()
                 )

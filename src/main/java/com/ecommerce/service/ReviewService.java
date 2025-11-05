@@ -184,4 +184,11 @@ public class ReviewService {
         return reviews.stream().map(reviewMapper :: reviewToReviewDto)
                 .toList();
     }
+
+
+    @Transactional
+    public void adminDeleteReview (Long id) {
+        Review review = reviewRepository.findById(id).orElseThrow(() -> new IllegalStateException("Review with provided id does not exist"));
+        reviewRepository.delete(review);
+    }
 }
