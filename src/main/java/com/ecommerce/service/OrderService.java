@@ -1,10 +1,7 @@
 package com.ecommerce.service;
 
 import com.ecommerce.dto.cart.CartItemDto;
-import com.ecommerce.dto.order.CreateGuestOrderDto;
-import com.ecommerce.dto.order.CreateUserOrder;
-import com.ecommerce.dto.order.OrderDto;
-import com.ecommerce.dto.order.OrderItemDto;
+import com.ecommerce.dto.order.*;
 import com.ecommerce.dto.payment.CheckoutResponseDto;
 import com.ecommerce.enums.OrderStatus;
 import com.ecommerce.mapper.OrderMapper;
@@ -45,8 +42,7 @@ public class OrderService {
 
 
     @Transactional
-    public CheckoutResponseDto createOrderFromCart(CreateUserOrder createUserOrder) {
-
+    public CreateOrderDto createOrderFromCart(CreateUserOrder createUserOrder) {
         Client client = authenticateClient.getAuthenticatedClient();
         Cart cart = client.getCart();
 
@@ -55,23 +51,18 @@ public class OrderService {
         }
 
         BigDecimal itemsPrice = cart.getCartItems().stream()
-                .map(CartItem :: getSubtotal)
+                .map(CartItem::getSubtotal)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-//        calculate total price including delivery
         BigDecimal totalPrice = itemsPrice.add(createUserOrder.getDeliveryPrice());
 
-//        initial hashset
-        Set<OrderItem> orderItems = new HashSet<>();
-
-        for (CartItem cartItem : cart.getCartItems()) {
-            OrderItem orderItem = OrderItem.builder()
-                    .plant(cartItem.getPlant())
-                    .quantity(cartItem.getQuantity())
-                    .priceAtPurchase(cartItem.getPlant().getPrice())
-                    .build();
-            orderItems.add(orderItem);
-        }
+        Set<OrderItem> orderItems = cart.getCartItems().stream()
+                .map(cartItem -> OrderItem.builder()
+                        .plant(cartItem.getPlant())
+                        .quantity(cartItem.getQuantity())
+                        .priceAtPurchase(cartItem.getPlant().getPrice())
+                        .build())
+                .collect(Collectors.toSet());
 
         Order order = Order.builder()
                 .client(client)
@@ -87,40 +78,24 @@ public class OrderService {
                 .isCompanyOrder(createUserOrder.isCompanyOrder())
                 .build();
 
-        orderItems.forEach(item->item.setOrder(order));
         order.setOrderNumber(order.generateOrderNumber());
-
-        if (order.isCompanyOrder() && (order.getNip() == null || order.getCompanyName() == null)) {
-            throw new IllegalStateException("You have to correct nip or company name");
-        }
-        cart.getCartItems().clear();
+        orderItems.forEach(item -> item.setOrder(order));
 
         orderRepository.save(order);
+        cart.getCartItems().clear();
 
-        switch (order.getPaymentMethod()) {
-            case STRIPE -> {
-                CheckoutResponseDto checkoutResponseDto = paymentService.createCheckoutSession(order.getId(), order.getOrderNumber());
-                return CheckoutResponseDto.builder()
-                        .orderNumber(order.getOrderNumber())
-                        .stripeCheckoutUrl(checkoutResponseDto.getStripeCheckoutUrl())
-                        .build();
-            }
-
-            case CASH_ON_DELIVERY -> {
-                order.setStatus(OrderStatus.PROCESSING);
-                orderRepository.save(order);
-                return CheckoutResponseDto.builder()
-                        .orderNumber(order.getOrderNumber())
-                        .build();
-            }
-
-            default -> throw new IllegalArgumentException("Unsupported payment method");
-        }
+        return new CreateOrderDto(
+                order.getId(),
+                order.getOrderNumber(),
+                order.getTotalPrice(),
+                order.getStatus()
+        );
     }
 
 
+
     @Transactional
-    public CheckoutResponseDto createGuestOrder (CreateGuestOrderDto createGuestOrderDto) {
+    public CreateOrderDto createGuestOrder (CreateGuestOrderDto createGuestOrderDto) {
 
         Address address = Address.builder()
                 .street(createGuestOrderDto.getShippingAddress().getStreet())
@@ -190,25 +165,13 @@ public class OrderService {
 
         orderRepository.save(order);
 
+        return CreateOrderDto.builder()
+                .status(order.getStatus())
+                .totalPrice(order.getTotalPrice())
+                .orderNumber(order.getOrderNumber())
+                .orderId(order.getId())
+                .build();
 
-        switch (order.getPaymentMethod()) {
-            case STRIPE -> {
-                CheckoutResponseDto checkoutResponseDto = paymentService.createCheckoutSession(order.getId() , order.getOrderNumber());
-                return CheckoutResponseDto.builder()
-                        .orderNumber(order.getOrderNumber())
-                        .stripeCheckoutUrl(checkoutResponseDto.getStripeCheckoutUrl())
-                        .build();
-            }
-            case CASH_ON_DELIVERY -> {
-                order.setStatus(OrderStatus.PROCESSING);
-                orderRepository.save(order);
-                return CheckoutResponseDto.builder()
-                        .orderNumber(order.getOrderNumber())
-                        .build();
-            }
-
-            default -> throw new IllegalArgumentException("Unsupported paymend method");
-        }
     }
 
     public List<OrderDto> findAllUserOrders () {

@@ -13,7 +13,7 @@ public class StripeWebhookController {
 
     @PostMapping("/webhook")
     public ResponseEntity<String> handleWebhook(@RequestBody String payload, @RequestHeader("Stripe-Signature") String sigheader) {
-        paymentService.handleStripeEvent(payload,sigheader);
-        return ResponseEntity.ok("Recieved");
+        paymentService.handleStripeWebHook(payload, sigheader);
+        return ResponseEntity.ok("Webhook received");
     }
 }

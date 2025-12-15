@@ -23,11 +23,11 @@ public class OrderController {
 
     private final OrderService orderService;
 
-    @PostMapping
-    public ResponseEntity<CheckoutResponseDto> createOrder (@Valid @RequestBody CreateUserOrder createUserOrder) {
-        CheckoutResponseDto checkoutResponseDto = orderService.createOrderFromCart(createUserOrder);
-        return ResponseEntity.ok(checkoutResponseDto);
-    }
+//    @PostMapping
+//    public ResponseEntity<CheckoutResponseDto> createOrder (@Valid @RequestBody CreateUserOrder createUserOrder) {
+//        CheckoutResponseDto checkoutResponseDto = orderService.createOrderFromCart(createUserOrder);
+//        return ResponseEntity.ok(checkoutResponseDto);
+//    }
 
     @GetMapping
     public ResponseEntity<List<OrderDto>> findAllOrdersFromClient () {
@@ -39,8 +39,13 @@ public class OrderController {
         return ResponseEntity.ok(orderService.updateStatus(id, updateOrderStatusDto.getOrderStatus()));
     }
 
+//    @PostMapping("/guest")
+//    public ResponseEntity<CheckoutResponseDto> createGuestOrder (@RequestBody CreateGuestOrderDto createGuestOrderDto) {
+//        return ResponseEntity.ok(orderService.createGuestOrder(createGuestOrderDto));
+//    }
+
     @PostMapping("/guest")
-    public ResponseEntity<CheckoutResponseDto> createGuestOrder (@RequestBody CreateGuestOrderDto createGuestOrderDto) {
+    public ResponseEntity<CreateOrderDto> createGuestOrder (@RequestBody CreateGuestOrderDto createGuestOrderDto) {
         return ResponseEntity.ok(orderService.createGuestOrder(createGuestOrderDto));
     }
 
@@ -59,4 +64,12 @@ public class OrderController {
         List<OrderDto> orderDtos = orderService.findAllOrders();
         return ResponseEntity.ok(orderDtos);
     }
+
+
+    @PostMapping
+    public ResponseEntity<CreateOrderDto> createOrder (@Valid @RequestBody CreateUserOrder createUserOrder) {
+        CreateOrderDto checkoutResponseDto = orderService.createOrderFromCart(createUserOrder);
+        return ResponseEntity.ok(checkoutResponseDto);
+    }
+
 }

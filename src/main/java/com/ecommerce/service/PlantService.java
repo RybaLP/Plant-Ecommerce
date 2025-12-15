@@ -9,6 +9,8 @@ import com.ecommerce.mapper.PlantMapper;
 import com.ecommerce.model.product.Plant;
 import com.ecommerce.repository.plant.PlantRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -54,6 +56,7 @@ public class PlantService {
 
 
     @Transactional(readOnly = true)
+//    @Cacheable(value = "plants", key = "'allPlants'")
     public List<PlantDto> getAllPlants () {
         return plantRepository.findAll()
                 .stream()
@@ -63,6 +66,7 @@ public class PlantService {
 
 
     @Transactional
+//    @CacheEvict(value = "plants", allEntries = true)
     public PlantDto createPlantDto (PlantRequestDto plantRequestDto) {
         boolean doesExist = plantRepository.existsByName(plantRequestDto.getName());
         if (doesExist) {
@@ -87,6 +91,7 @@ public class PlantService {
 
 
     @Transactional
+    @CacheEvict(value = "plants", allEntries = true)
     public PlantDto updatePlant (PlantRequestDto plantRequestDto, Long id) {
 
         Plant plant = plantRepository.findById(id)
