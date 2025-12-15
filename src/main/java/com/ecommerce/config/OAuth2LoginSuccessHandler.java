@@ -1,12 +1,12 @@
 package com.ecommerce.config;
 
-import com.ecommerce.dto.auth.AuthenticationResponseDto;
 import com.ecommerce.enums.AuthProvider;
 import com.ecommerce.model.cart.Cart;
 import com.ecommerce.model.user.Client;
 import com.ecommerce.repository.user.ClientRepository;
 import com.ecommerce.service.JwtService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -25,6 +25,9 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 
     private final ClientRepository clientRepository;
     private final JwtService jwtService;
+
+    @Value("${frontendUrl}")
+    private String frontendUrl;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
@@ -62,7 +65,7 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
         String token = jwtService.generateToken(client);
         String refreshToken = jwtService.generateRefreshToken(client);
 
-        String redirectUrl = "http://localhost:5173/oauth2/redirect?token=" + token;
+        String redirectUrl = frontendUrl + "/oauth2/redirect?token=" + token;
         response.sendRedirect(redirectUrl);
     }
 }

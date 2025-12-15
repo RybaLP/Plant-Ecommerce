@@ -29,7 +29,7 @@ public class PaymentService {
     @Value("${stripe.webhook.secret}")
     private String webhookSecret;
 
-    @Value("${frontend.url}")
+    @Value("${frontendUrl}")
     private String frontendUrl;
 
 
