@@ -4,9 +4,7 @@ import com.ecommerce.dto.payment.CheckoutResponseDto;
 import com.ecommerce.enums.OrderStatus;
 import com.ecommerce.model.order.Order;
 import com.ecommerce.model.order.OrderItem;
-import com.ecommerce.model.user.Client;
 import com.ecommerce.repository.order.OrderRepository;
-import com.ecommerce.util.AuthenticateClient;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Event;
 import com.stripe.model.checkout.Session;
@@ -35,7 +33,7 @@ public class PaymentService {
 
     public CheckoutResponseDto createCheckoutSession(Long orderId) {
         Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new IllegalStateException(""));
+                .orElseThrow(() -> new IllegalStateException("Could not find order with provided order id"));
 
         try {
             SessionCreateParams params = SessionCreateParams.builder()
@@ -106,7 +104,6 @@ public class PaymentService {
                 break;
         }
     }
-
 
 
     private void handleCheckoutSessionCompleted(Event event) {
